@@ -13,14 +13,14 @@ RUN apt-get update && apt-get install -y  \
 RUN pecl install redis-4.0.1 \
     && docker-php-ext-enable redis 
 
-RUN  mkdir -p /etc/nginx/sites-available /autostart /etc/ssl/certs/custom 
-
 RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/
 RUN docker-php-ext-install -j$(nproc) gd
 
+RUN  mkdir -p /etc/nginx/sites-enabled /autostart /etc/ssl/certs/custom 
+
 # Configure nginx
 COPY ./files/nginx/nginx.conf /etc/nginx/nginx.conf
-COPY ./files/nginx/default_server.conf /sites/default.conf
+COPY ./files/nginx/default_server.conf /etc/nginx/sites-enabled/default.conf
 COPY ./files/src/ /var/www/html/
 
 COPY ./files/php/php-fpm.d/docker.conf /usr/local/etc/php-fpm.d/docker.conf
